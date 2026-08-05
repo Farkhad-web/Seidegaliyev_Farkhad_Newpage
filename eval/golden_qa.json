@@ -1,0 +1,33 @@
+[
+  {
+    "question": "How many days a week can employees work remotely?",
+    "expect_keyword": "three",
+    "expect_source_contains": "remote_work_policy"
+  },
+  {
+    "question": "What is the home office equipment stipend amount?",
+    "expect_keyword": "300",
+    "expect_source_contains": "remote_work_policy"
+  },
+  {
+    "question": "What hours do remote employees need to be reachable on Slack?",
+    "expect_keyword": "11",
+    "expect_source_contains": "remote_work_policy"
+  },
+  {
+    "question": "How much is the monthly home internet reimbursement?",
+    "expect_keyword": "40",
+    "expect_source_contains": "remote_work_policy"
+  },
+  {
+    "question": "How far in advance should international remote work be requested?",
+    "expect_keyword": "four weeks",
+    "expect_source_contains": "remote_work_policy"
+  },
+  {
+    "question": "What is the company's policy on quantum computing research budgets?",
+    "expect_keyword": null,
+    "expect_source_contains": null,
+    "expect_refusal": true
+  }
+]

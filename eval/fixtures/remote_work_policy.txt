@@ -1,0 +1,19 @@
+Remote Work Policy — Acme Robotics
+
+1. Eligibility
+Full-time employees who have completed their 90-day probation period are eligible to work remotely up to three days per week. Managers may approve additional remote days on a case-by-case basis for employees who have been on the team for over a year.
+
+2. Equipment
+The company provides a laptop, external monitor, and a one-time $300 home-office stipend for desk and chair setup. Requests for additional equipment go through the IT helpdesk portal and are typically approved within five business days.
+
+3. Core hours
+All employees, remote or in-office, must be reachable on Slack between 11:00 and 16:00 in their local timezone. Meetings that span more than two timezones should be recorded for asynchronous viewing.
+
+4. Security requirements
+Remote employees must use the company VPN when accessing internal tools and must enable full-disk encryption on any device used for work. Company data may not be stored on personal cloud drives.
+
+5. Expense reimbursement
+Home internet costs are reimbursed up to $40 per month with a submitted receipt. Co-working space memberships are reimbursed up to $150 per month for employees without a suitable home office, subject to manager approval.
+
+6. International remote work
+Working from outside the country of employment for more than 20 consecutive days requires prior written approval from HR and Legal, due to tax and visa implications. Requests should be submitted at least four weeks in advance.

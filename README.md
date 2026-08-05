@@ -1,4 +1,4 @@
-# DocuMind — chat with your own documents
+# Chat With Your Docs
 
 A RAG assistant that answers questions about a collection of PDF/TXT/Markdown files, with inline citations, a confidence signal, and a built-in observability panel that shows exactly what was retrieved and why for every answer.
 

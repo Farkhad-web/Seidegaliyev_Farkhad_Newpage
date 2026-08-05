@@ -31,12 +31,12 @@ export function Sidebar({
   return (
     <aside className="flex h-full w-72 shrink-0 flex-col border-r border-ink-700 bg-ink-900">
       <div className="flex items-center gap-2 px-4 pb-2 pt-5">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500 text-sm font-bold text-white">
-          D
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-500 text-sm font-bold text-white">
+          C
         </div>
         <div>
-          <div className="text-sm font-semibold text-ink-100">DocuMind</div>
-          <div className="text-[11px] text-ink-500">Chat with your docs</div>
+          <div className="text-sm font-semibold leading-tight text-ink-100">Chat With Your Docs</div>
+          <div className="text-[11px] text-ink-500">Ask your documents anything</div>
         </div>
       </div>
 

@@ -52,7 +52,7 @@ class Settings(BaseSettings):
     rate_limit_upload_per_minute: int = 10
 
     # --- Storage ---
-    sqlite_path: str = str(DATA_DIR / "documind.db")
+    sqlite_path: str = str(DATA_DIR / "chat_with_your_docs.db")
     chroma_path: str = str(DATA_DIR / "chroma")
 
     # --- CORS ---

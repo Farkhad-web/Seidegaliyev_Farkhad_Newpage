@@ -1,6 +1,6 @@
 """Tiny retrieval/answer-quality regression harness.
 
-Not a unit test — it drives a *running* DocuMind instance over HTTP the same
+Not a unit test — it drives a *running* Chat With Your Docs instance over HTTP the same
 way a real user would, so it also exercises ingestion, hybrid retrieval, and
 the live Claude call end to end. Intended to be run by hand after a prompt
 or retrieval-tuning change, to sanity-check nothing regressed, before it

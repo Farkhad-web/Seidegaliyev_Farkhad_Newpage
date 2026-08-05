@@ -23,13 +23,13 @@ async def lifespan(app: FastAPI):
         rebuild_bm25_index(session)
     app.state.chat_limiter = SlidingWindowLimiter(settings.rate_limit_chat_per_minute)
     app.state.upload_limiter = SlidingWindowLimiter(settings.rate_limit_upload_per_minute)
-    logger.info("DocuMind backend started")
+    logger.info("Chat With Your Docs backend started")
     yield
 
 
 def create_app() -> FastAPI:
     settings = get_settings()
-    app = FastAPI(title="DocuMind API", version="1.0.0", lifespan=lifespan)
+    app = FastAPI(title="Chat With Your Docs API", version="1.0.0", lifespan=lifespan)
 
     app.add_middleware(
         CORSMiddleware,

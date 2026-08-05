@@ -158,7 +158,7 @@ export function ChatPanel({ conversationId, onConversationId, hasDocuments }: Pr
           </button>
         </div>
         <p className="mx-auto mt-2 max-w-3xl text-center text-xs text-ink-500">
-          DocuMind answers only from your uploaded documents and cites its sources — it will say so when it doesn't know.
+          Chat With Your Docs answers only from your uploaded documents and cites its sources — it will say so when it doesn't know.
         </p>
       </div>
 
@@ -176,7 +176,7 @@ function EmptyState({ hasDocuments }: { hasDocuments: boolean }) {
       </h2>
       <p className="max-w-sm text-sm text-ink-400">
         {hasDocuments
-          ? "DocuMind retrieves the most relevant excerpts and answers with citations you can inspect."
+          ? "Chat With Your Docs retrieves the most relevant excerpts and answers with citations you can inspect."
           : "Use the sidebar to upload a PDF, text, or Markdown file — then come back here to ask questions about it."}
       </p>
     </div>

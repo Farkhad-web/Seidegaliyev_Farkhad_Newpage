@@ -13,7 +13,7 @@ import shutil
 import tempfile
 from pathlib import Path
 
-_TMP_DIR = Path(tempfile.mkdtemp(prefix="documind_test_"))
+_TMP_DIR = Path(tempfile.mkdtemp(prefix="chat_with_your_docs_test_"))
 os.environ["ANTHROPIC_API_KEY"] = "test-key"
 os.environ["SQLITE_PATH"] = str(_TMP_DIR / "test.db")
 os.environ["CHROMA_PATH"] = str(_TMP_DIR / "chroma")

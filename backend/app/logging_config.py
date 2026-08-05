@@ -1,10 +1,5 @@
-"""Structured (JSON) logging so every request and RAG trace is machine-readable.
-
-This is the cheap half of "observability": no external APM, just logs shaped
-so they could be piped into anything that reads JSON lines. The other half
-(the Trace / TraceChunk DB tables) captures the *content* of each RAG call for
-the in-app Observability panel; this module captures *operational* events.
-"""
+"""JSON logging for ops events. The Trace table (see models.py) covers the
+content of each RAG call for the Observability tab; this is just the plumbing."""
 import json
 import logging
 import sys
@@ -38,9 +33,8 @@ def configure_logging(level: str = "INFO") -> None:
     # Quiet noisy third-party loggers down to warnings.
     for noisy in ("uvicorn.access", "httpx", "sentence_transformers", "chromadb"):
         logging.getLogger(noisy).setLevel(logging.WARNING)
-    # Chroma's telemetry pings a version-mismatched posthog signature and
-    # logs it as an ERROR even with anonymized_telemetry disabled — harmless,
-    # but noisy enough in every request log to be worth silencing outright.
+    # Chroma's telemetry hits a version-mismatched posthog call and logs it
+    # as an ERROR on every request even with telemetry disabled. Harmless, just noisy.
     logging.getLogger("chromadb.telemetry.product.posthog").setLevel(logging.CRITICAL)
 
 

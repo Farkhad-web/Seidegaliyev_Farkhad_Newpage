@@ -3,9 +3,8 @@ import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 
-// Per react-pdf's docs, the worker must be configured in the same module
-// that renders <Document>/<Page> — setting it elsewhere (e.g. main.tsx) can
-// be overwritten by module execution order.
+// must be set in this module, not e.g. main.tsx — react-pdf docs warn it
+// can get overwritten by import order otherwise
 pdfjs.GlobalWorkerOptions.workerSrc = new URL("pdfjs-dist/build/pdf.worker.min.mjs", import.meta.url).toString();
 
 interface Props {

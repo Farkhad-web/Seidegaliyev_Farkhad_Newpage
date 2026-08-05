@@ -1,9 +1,5 @@
-"""Central runtime configuration, loaded from environment variables / .env.
-
-Every tunable that affects retrieval quality or cost lives here rather than
-scattered through the codebase, so the trade-offs documented in the README
-map onto one place in the code.
-"""
+"""Runtime config, loaded from env vars / .env. Keeping every retrieval/cost
+tunable here instead of scattered through the code."""
 from functools import lru_cache
 from pathlib import Path
 
@@ -57,8 +53,7 @@ class Settings(BaseSettings):
     files_path: str = str(DATA_DIR / "files")
 
     # --- CORS ---
-    # 5173 = Vite dev server (frontend run outside Docker); 8080 = the nginx
-    # container published by docker-compose.
+    # 5173 = Vite dev server, 8080 = the nginx container from docker-compose.
     cors_origins: list[str] = ["http://localhost:5173", "http://localhost:8080"]
 
     @property

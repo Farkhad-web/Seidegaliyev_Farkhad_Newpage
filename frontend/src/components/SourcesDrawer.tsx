@@ -3,9 +3,8 @@ import { api } from "../api";
 import type { RetrievedChunk } from "../types";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "./ui/sheet";
 
-// react-pdf pulls in pdf.js, the single heaviest dependency in this app —
-// load it only when a source panel actually needs to render a PDF page,
-// not on initial page load.
+// react-pdf/pdf.js is the heaviest dep in the app — only load it when a
+// panel actually needs to render a PDF page
 const PdfSourcePreview = lazy(() => import("./PdfSourcePreview"));
 
 interface Props {

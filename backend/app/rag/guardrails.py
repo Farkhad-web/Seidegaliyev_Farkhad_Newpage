@@ -1,20 +1,10 @@
-"""Guardrails applied before and around the LLM call.
+"""Guardrails applied before and around the LLM call — small, testable
+functions instead of one black-box "safety layer".
 
-Kept as small, explicit, testable functions rather than a black-box
-"safety layer" — each one maps to a specific failure mode:
-  - validate_message: bounds input size (cost + abuse control).
-  - validate_upload: bounds file type/size (cost + parser-crash control).
-  - assess_confidence: a numeric heuristic surfaced to the UI as a signal,
-    deliberately NOT a hard block — see note below.
-
-On the confidence threshold: retrieval score is a noisy, model-specific
-number. Hard-blocking answers below a cosine-similarity cutoff produces
-false negatives (a valid answer refused because the local embedding model
-under-scored it) as often as it prevents hallucination. So the threshold is
-used to *flag* low confidence to the user and to the model (which is told to
-say so itself, per the system prompt) rather than to silently refuse — the
-groundedness instruction in the prompt is the primary guardrail, this is a
-secondary, transparent signal.
+Note on confidence: retrieval score is noisy, so hard-blocking below a
+cutoff would refuse as many valid answers as it prevents hallucinations on.
+It's used to flag low confidence to the UI and the model instead — the
+groundedness instruction in the system prompt is the real guardrail here.
 """
 from dataclasses import dataclass
 

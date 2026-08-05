@@ -1,10 +1,8 @@
-"""Document ingestion: parse -> chunk -> embed -> persist (SQLite + Chroma)
--> rebuild the BM25 index.
+"""Document ingestion: parse -> chunk -> embed -> persist -> rebuild BM25.
 
-Runs synchronously inside the upload request for simplicity — acceptable for
-demo-sized documents (a few dozen pages embeds in well under a second on
-CPU). For large files or high upload volume this is the first thing I'd move
-to a background task queue (see README "What's next").
+Runs synchronously inside the upload request — fine for demo-sized docs (a
+few dozen pages embeds in well under a second on CPU). First thing to move
+to a background queue if upload volume grows.
 """
 from sqlmodel import Session, select
 

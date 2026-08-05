@@ -1,11 +1,5 @@
-"""Minimal in-memory sliding-window rate limiter.
-
-A single-process, in-memory limiter is the right amount of engineering for a
-take-home / demo deployment: it needs zero infra and is easy to reason about.
-It will not survive multiple worker processes or a restart, which is exactly
-the trade-off called out in the README (production would move this to
-Redis-backed limiting, e.g. via slowapi + a shared store).
-"""
+"""In-memory sliding-window rate limiter. Single-process only — fine for now,
+would move to Redis-backed limiting before running multiple workers."""
 import time
 from collections import defaultdict, deque
 

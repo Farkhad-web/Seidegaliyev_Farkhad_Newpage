@@ -1,11 +1,5 @@
-"""Raw uploaded-file storage.
-
-Deliberately separate from the RAG pipeline: nothing here touches
-embeddings, retrieval, or chunking. It exists purely to support two
-presentation-layer features — serving the original file back to the
-frontend for a source preview, and re-running ingestion (reindex) without
-asking the user to re-upload a file we already received once.
-"""
+"""Raw uploaded-file storage — separate from the RAG pipeline, just here to
+support the PDF preview and reindex-without-re-upload endpoints."""
 from pathlib import Path
 
 from app.config import get_settings

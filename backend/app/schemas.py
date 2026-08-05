@@ -6,9 +6,8 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class ORMBase(BaseModel):
-    """Base for schemas that are returned directly from SQLModel ORM
-    objects (as opposed to hand-built dicts), so Pydantic v2 will read
-    attributes off the object instead of requiring a dict/mapping."""
+    """Base for schemas returned straight from SQLModel objects instead of
+    hand-built dicts — needs from_attributes for Pydantic v2 to read them."""
 
     model_config = ConfigDict(from_attributes=True)
 

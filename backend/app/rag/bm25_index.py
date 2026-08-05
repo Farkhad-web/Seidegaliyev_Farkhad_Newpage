@@ -1,11 +1,6 @@
 """In-memory BM25 keyword index, rebuilt from SQLite on startup and after
-every document add/delete.
-
-Rebuilding the whole index on each mutation is O(total chunks) — fine up to
-tens of thousands of chunks, and far simpler than maintaining an incremental
-BM25 structure. This is the same "simple first" trade-off as the rate
-limiter; noted here and in the README rather than hidden.
-"""
+every document add/delete. Full rebuild is O(total chunks) — fine up to tens
+of thousands of chunks, simpler than an incremental structure."""
 import re
 import threading
 

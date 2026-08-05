@@ -1,10 +1,9 @@
-"""Orchestrates one chat turn end to end, yielding SSE-ready events as it
-goes so the frontend can show progressive status ("searching" -> sources
-found -> tokens streaming) instead of one long blocking spinner.
+"""Orchestrates one chat turn end to end, yielding SSE events as it goes so
+the frontend can show progressive status instead of one blocking spinner.
 
-Flow: validate -> (maybe) condense question using chat history -> hybrid
-retrieve -> confidence guardrail -> build grounded prompt -> stream Claude ->
-persist Message + Trace rows for the Observability panel.
+Flow: validate -> condense question (if there's history) -> hybrid retrieve
+-> confidence check -> build grounded prompt -> stream Claude -> persist
+Message + Trace rows.
 """
 import time
 from collections.abc import AsyncIterator
@@ -87,9 +86,8 @@ async def run_chat_turn(session: Session, conversation_id: str | None, raw_messa
         async for event in _run_retrieval_and_generation(session, conversation, history, user_text, settings, t_start):
             yield event
     except Exception:
-        # Anthropic errors (bad key, rate limit, network) or any other
-        # unexpected failure surface as one clean SSE error event instead of
-        # dropping the connection mid-stream with no explanation.
+        # Anthropic errors, network blips, whatever — surface one clean SSE
+        # error event instead of dropping the connection mid-stream.
         logger.exception("chat turn failed", extra={"extra_fields": {"conversation_id": conversation.id}})
         yield {"type": "error", "message": "Something went wrong while generating the answer. Please try again."}
 

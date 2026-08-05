@@ -1,16 +1,10 @@
 """Local embedding model (sentence-transformers), loaded once as a singleton.
 
-Why a local model instead of an embeddings API (OpenAI / Voyage):
-  - Zero extra API key / cost — the only paid dependency is Anthropic, for
-    generation.
-  - Deterministic and works fully offline once the model is cached in the
-    Docker image, which matters for a self-contained take-home deliverable.
-  - "all-MiniLM-L6-v2" is a well-known, cheap (384-dim, ~80MB) baseline good
-    enough to demonstrate the retrieval architecture end-to-end.
-Trade-off, stated plainly: it lags OpenAI text-embedding-3 / Voyage-3 on
-retrieval benchmarks (MTEB), especially for longer or more nuanced passages.
-Swapping it out is a one-file change (this module) since every caller only
-sees `embed_texts` / `embed_query`.
+Local instead of an API (OpenAI/Voyage) since Anthropic has no embeddings
+endpoint anyway — this keeps it to one paid dependency, no extra key, works
+offline once cached. It does lag the hosted models on retrieval benchmarks;
+swapping it out later is contained to this file since callers only see
+`embed_texts` / `embed_query`.
 """
 import threading
 

@@ -1,13 +1,6 @@
-"""Test setup notes:
-
-- All external network calls (the sentence-transformers model download, the
-  Anthropic API) are replaced with deterministic fakes. Tests must run
-  offline and fast — that's what makes them safe to run on every commit.
-- Environment variables that control storage paths are set *before* any
-  `app.*` module is imported (settings are read once, at import time, via
-  an `lru_cache`d `get_settings()`), so each test session gets its own
-  throwaway SQLite file and Chroma directory.
-"""
+"""Embeddings and the Anthropic client are both faked so tests run offline
+and fast. Env vars for storage paths are set before any app.* import, since
+get_settings() is lru_cache'd and reads them once at import time."""
 import os
 import shutil
 import tempfile

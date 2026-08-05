@@ -84,8 +84,7 @@ export default function App() {
     refreshConversations();
   }
 
-  // Navigating from the mobile drawer should dismiss it so the user sees
-  // the result immediately, instead of having to close it by hand.
+  // dismiss the mobile drawer after navigating, instead of leaving it open
   function withMobileClose<A extends unknown[]>(fn: (...args: A) => void) {
     return (...args: A) => {
       fn(...args);
@@ -108,10 +107,8 @@ export default function App() {
   return (
     <TooltipProvider delayDuration={200}>
       <div className="flex h-screen flex-col bg-ink-950 text-ink-100 md:flex-row">
-        {/* Desktop: sidebar is always in-flow. Mobile: collapses into a Sheet
-            triggered from the top bar below — two renders of <Sidebar>, one
-            hidden per breakpoint, is the standard way to avoid re-deriving
-            "is this a mobile viewport" in JS just to flip a layout mode. */}
+        {/* two <Sidebar> renders, one hidden per breakpoint — simpler than
+            tracking viewport width in JS to flip a layout mode */}
         <div className="hidden h-full md:block">
           <Sidebar
             {...sidebarProps}

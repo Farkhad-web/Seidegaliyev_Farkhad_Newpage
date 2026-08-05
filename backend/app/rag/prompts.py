@@ -1,15 +1,9 @@
-"""All prompt templates in one place, so the model's behavior can be audited
-and tuned without hunting through the pipeline code.
+"""Prompt templates, kept in one place so they're easy to audit and tune.
 
-Two guardrail ideas are baked directly into the system prompt rather than
-implemented as a separate filtering pass:
-  1. Groundedness: told explicitly to answer only from the given excerpts and
-     to say so plainly when the excerpts don't cover the question, instead
-     of leaving that to chance.
-  2. Prompt-injection resistance: retrieved text is wrapped in
-     <document> tags and the model is told that anything inside them is
-     *data*, never instructions — a direct mitigation against a malicious or
-     careless document containing text like "ignore previous instructions".
+Two guardrails live in the system prompt itself rather than a separate
+filter: groundedness (told to say when the excerpts don't cover something,
+not guess) and prompt-injection resistance (<document> content is tagged as
+data, never instructions).
 """
 
 SYSTEM_PROMPT = """You are Chat With Your Docs, a careful research assistant that answers questions strictly using the user's uploaded documents.

@@ -16,11 +16,8 @@ interface Props {
   activeChunkId?: string;
 }
 
-// Turns "...deficiency [1][3]." into real markdown links ("[1](#cite-1)")
-// so ReactMarkdown's own link renderer can turn them into clickable citation
-// badges — no custom remark plugin or manual AST work required. Only bare
-// `[n]` not already followed by `(` is touched, so it won't collide with an
-// actual markdown link the model happens to emit.
+// turns "...deficiency [1][3]." into real markdown links so ReactMarkdown's
+// own link renderer can turn them into citation badges — no AST plugin needed
 function linkifyCitations(markdown: string): string {
   return markdown.replace(/\[(\d+)\](?!\()/g, "[$1](#cite-$1)");
 }

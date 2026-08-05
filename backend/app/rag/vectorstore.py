@@ -1,13 +1,7 @@
-"""Thin wrapper around a persistent Chroma collection.
-
-Chroma was picked over pgvector/Qdrant/etc. for the same reason as the local
-embedding model: it runs embedded, in-process, persisted to a local
-directory — no extra service in docker-compose, no network hop, good enough
-for a document collection sized for a demo (hundreds to low thousands of
-chunks). At real scale (many users, millions of chunks, need for horizontal
-scaling) this is the first component I'd swap for a managed vector DB or
-pgvector alongside the existing SQL store.
-"""
+"""Thin wrapper around a persistent Chroma collection. Picked over
+pgvector/Qdrant for the same reason as the local embedding model — runs
+in-process, no extra service in docker-compose. First thing I'd swap for a
+managed vector DB at real scale."""
 import chromadb
 from chromadb.config import Settings as ChromaSettings
 

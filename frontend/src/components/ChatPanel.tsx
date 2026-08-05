@@ -75,9 +75,8 @@ export function ChatPanel({ conversationId, onConversationId, hasDocuments }: Pr
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior });
   }
 
-  // Auto-scroll while streaming, but only if the user is already near the
-  // bottom — if they've scrolled up to reread something, don't yank them
-  // back down on every token.
+  // only auto-scroll if already near the bottom, so scrolling up to reread
+  // something doesn't get yanked back down on every token
   useEffect(() => {
     if (isNearBottom) scrollToBottom(isStreaming ? "auto" : "smooth");
   }, [messages, stage]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -88,7 +87,7 @@ export function ChatPanel({ conversationId, onConversationId, hasDocuments }: Pr
     setIsNearBottom(el.scrollHeight - el.scrollTop - el.clientHeight < NEAR_BOTTOM_PX);
   }
 
-  // Auto-resize the input as the user types, capped by the textarea's own max-h.
+  // auto-resize the input as the user types
   useEffect(() => {
     const el = textareaRef.current;
     if (!el) return;

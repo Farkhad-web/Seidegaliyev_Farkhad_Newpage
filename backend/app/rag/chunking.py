@@ -1,17 +1,8 @@
-"""Recursive character-based text splitter.
-
-Design: try to split on the "biggest" semantic boundary first (blank line),
-falling back to progressively smaller ones (newline, sentence, word, hard
-cut) only where a piece is still too large. This keeps paragraphs and
-sentences intact far more often than a fixed-size sliding window, at the
-cost of chunk sizes that vary a bit around the target instead of being exact.
-Overlap is then layered on top so a fact split across a chunk boundary is
-still visible to whichever chunk retrieval picks up.
-
-Written by hand (no LangChain) — the algorithm is short enough to own
-directly and keeping it in-house means no dependency on a framework's
-internal chunk-boundary heuristics.
-"""
+"""Recursive character splitter — no LangChain, just splits on the biggest
+boundary first (blank line, then newline, sentence, word, hard cut) so
+paragraphs stay intact more often than a fixed sliding window would. Overlap
+gets layered on top after so a fact split across a boundary is still visible
+to whichever chunk retrieval picks."""
 from dataclasses import dataclass
 
 DEFAULT_SEPARATORS = ["\n\n", "\n", ". ", "! ", "? ", " ", ""]
@@ -89,10 +80,9 @@ def chunk_pages(
     chunk_size: int = 900,
     chunk_overlap: int = 150,
 ) -> list[ChunkPiece]:
-    """Chunk each page independently so every chunk carries one accurate
-    page number. Trade-off: a chunk never spans a page break, which can
-    occasionally cut off context that continues onto the next page — see
-    README for the sliding-window alternative considered."""
+    """Chunks each page independently so every chunk has one accurate page
+    number. Trade-off: a chunk never spans a page break, so a sentence
+    continuing onto the next page can lose some context."""
     pieces: list[ChunkPiece] = []
     global_index = 0
     for page_number, page_text in pages:

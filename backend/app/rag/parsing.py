@@ -1,11 +1,6 @@
-"""Turn an uploaded file into a list of (page_number, text) pairs.
-
-Parsing is intentionally kept per-page: it lets every downstream chunk carry
-an accurate page citation. Plain text/Markdown files have no page concept, so
-they're treated as a single "page 1" — good enough for the assignment's
-scope; a real improvement would be splitting long .md/.txt files into
-synthetic pages by heading or line-count (see README "What's next").
-"""
+"""Turns an uploaded file into a list of (page_number, text) pairs. Kept
+per-page so downstream chunks carry an accurate page citation. Plain
+text/Markdown has no page concept, so it's just treated as page 1."""
 import io
 
 from pypdf import PdfReader

@@ -1,12 +1,6 @@
-"""Anthropic Claude client: one call for (optional) question condensing, one
-streaming call for the grounded answer.
-
-Two different models by design: condensing a follow-up question into a
-standalone one is a cheap, low-latency, low-stakes task, so it uses Haiku;
-the grounded answer is the quality-sensitive part of the pipeline, so it
-uses Sonnet. This mirrors how most production RAG systems split "utility"
-LLM calls from the user-facing generation call to control cost/latency.
-"""
+"""Anthropic Claude client — one call to condense a follow-up question, one
+streaming call for the grounded answer. Condensing uses Haiku (cheap, low
+stakes); the actual answer uses Sonnet, where quality matters."""
 from collections.abc import AsyncIterator
 
 from anthropic import AsyncAnthropic

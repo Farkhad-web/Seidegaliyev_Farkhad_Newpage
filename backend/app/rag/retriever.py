@@ -1,14 +1,8 @@
-"""Hybrid retrieval: dense vector search + BM25 keyword search, combined with
-Reciprocal Rank Fusion (RRF).
-
-Why hybrid instead of vector-only: dense embeddings are great at semantic
-similarity but routinely miss exact terms that matter in domain text — model
-numbers, chemical names, error codes, acronyms — because those tokens are
-often underrepresented in a small local embedding model's training data.
-BM25 is the opposite: exact/lexical, blind to paraphrase. RRF fuses the two
-rankings without needing to normalize incomparable score scales (cosine
-similarity vs. BM25's unbounded score), which is what makes it a popular
-default over a hand-tuned weighted sum.
+"""Hybrid retrieval: dense vector search + BM25, fused with Reciprocal Rank
+Fusion. Vector search misses exact terms (model numbers, names, acronyms)
+that a small local embedding model underrepresents; BM25 catches those. RRF
+fuses by rank instead of score, since cosine similarity and BM25 scores
+aren't on comparable scales.
 """
 from dataclasses import dataclass
 
@@ -81,8 +75,8 @@ def hybrid_retrieve(session: Session, query_text: str) -> list[RetrievedChunk]:
 
 
 def top_confidence(results: list[RetrievedChunk]) -> float:
-    """Highest raw vector cosine similarity among the retrieved chunks — used
-    as a cheap, secondary groundedness signal (see guardrails.py)."""
+    """Highest raw vector similarity among the retrieved chunks — a cheap,
+    secondary groundedness signal (see guardrails.py)."""
     if not results:
         return 0.0
     return max(r.vector_score for r in results)

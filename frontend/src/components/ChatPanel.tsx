@@ -1,9 +1,13 @@
+import { ArrowDown, Send } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { api, streamChat } from "../api";
 import type { ChatMessage, RetrievedChunk } from "../types";
 import { MessageBubble } from "./MessageBubble";
 import { SourcesDrawer } from "./SourcesDrawer";
 import { StatusIndicator } from "./StatusIndicator";
+import { Button } from "./ui/button";
+import { Textarea } from "./ui/textarea";
 
 interface Props {
   conversationId: string | null;
@@ -14,13 +18,17 @@ interface Props {
 let idCounter = 0;
 const localId = () => `local-${Date.now()}-${idCounter++}`;
 
+const NEAR_BOTTOM_PX = 80;
+
 export function ChatPanel({ conversationId, onConversationId, hasDocuments }: Props) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
   const [stage, setStage] = useState<"retrieving" | "generating" | null>(null);
   const [activeChunk, setActiveChunk] = useState<RetrievedChunk | null>(null);
+  const [isNearBottom, setIsNearBottom] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
@@ -63,9 +71,30 @@ export function ChatPanel({ conversationId, onConversationId, hasDocuments }: Pr
     };
   }, [conversationId]);
 
+  function scrollToBottom(behavior: ScrollBehavior = "smooth") {
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior });
+  }
+
+  // Auto-scroll while streaming, but only if the user is already near the
+  // bottom — if they've scrolled up to reread something, don't yank them
+  // back down on every token.
   useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
-  }, [messages, stage]);
+    if (isNearBottom) scrollToBottom(isStreaming ? "auto" : "smooth");
+  }, [messages, stage]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  function handleScroll() {
+    const el = scrollRef.current;
+    if (!el) return;
+    setIsNearBottom(el.scrollHeight - el.scrollTop - el.clientHeight < NEAR_BOTTOM_PX);
+  }
+
+  // Auto-resize the input as the user types, capped by the textarea's own max-h.
+  useEffect(() => {
+    const el = textareaRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${el.scrollHeight}px`;
+  }, [input]);
 
   async function handleSend() {
     const text = input.trim();
@@ -73,6 +102,7 @@ export function ChatPanel({ conversationId, onConversationId, hasDocuments }: Pr
     setInput("");
     setIsStreaming(true);
     setStage("retrieving");
+    setIsNearBottom(true);
 
     const userMsg: ChatMessage = { id: localId(), role: "user", content: text, sources: [], lowConfidence: false, streaming: false };
     const assistantMsg: ChatMessage = { id: localId(), role: "assistant", content: "", sources: [], lowConfidence: false, streaming: true };
@@ -121,7 +151,7 @@ export function ChatPanel({ conversationId, onConversationId, hasDocuments }: Pr
 
   return (
     <div className="flex h-full flex-col">
-      <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto px-4 py-6 sm:px-8">
+      <div ref={scrollRef} onScroll={handleScroll} className="relative flex-1 space-y-4 overflow-y-auto px-4 py-6 sm:px-8">
         {messages.length === 0 && <EmptyState hasDocuments={hasDocuments} />}
         {messages.map((m) => (
           <MessageBubble
@@ -134,32 +164,47 @@ export function ChatPanel({ conversationId, onConversationId, hasDocuments }: Pr
         {stage && <StatusIndicator stage={stage} />}
       </div>
 
-      <div className="border-t border-ink-700 bg-ink-900/80 p-4 backdrop-blur">
-        <div className="mx-auto flex max-w-3xl items-end gap-2 rounded-2xl border border-ink-600 bg-ink-800 p-2 focus-within:border-brand-400">
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                handleSend();
-              }
-            }}
-            placeholder={hasDocuments ? "Ask a question about your documents…" : "Upload a document to get started…"}
-            rows={1}
-            className="max-h-40 flex-1 resize-none bg-transparent px-2 py-2 text-[15px] text-ink-100 placeholder:text-ink-500 focus:outline-none"
-          />
-          <button
-            onClick={handleSend}
-            disabled={isStreaming || !input.trim()}
-            className="mb-0.5 rounded-xl bg-brand-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-brand-400 disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            {isStreaming ? "…" : "Send"}
-          </button>
+      <div className="relative">
+        <AnimatePresence>
+          {!isNearBottom && (
+            <motion.button
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 6 }}
+              transition={{ duration: 0.15 }}
+              onClick={() => scrollToBottom()}
+              className="absolute -top-11 left-1/2 flex -translate-x-1/2 items-center gap-1.5 rounded-full border border-ink-600 bg-ink-800 px-3 py-1.5 text-xs font-medium text-ink-200 shadow-soft hover:border-brand-400 hover:text-brand-200"
+            >
+              <ArrowDown className="h-3.5 w-3.5" />
+              Latest message
+            </motion.button>
+          )}
+        </AnimatePresence>
+
+        <div className="border-t border-ink-700 bg-ink-900/80 p-4 backdrop-blur">
+          <div className="mx-auto flex max-w-3xl items-end gap-2 rounded-lg border border-ink-600 bg-ink-800 p-2 focus-within:border-brand-400">
+            <Textarea
+              ref={textareaRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSend();
+                }
+              }}
+              placeholder={hasDocuments ? "Ask a question about your documents…" : "Upload a document to get started…"}
+              rows={1}
+              className="max-h-40 px-2 py-2"
+            />
+            <Button onClick={handleSend} disabled={isStreaming || !input.trim()} size="icon" aria-label="Send message">
+              <Send className="h-4 w-4" />
+            </Button>
+          </div>
+          <p className="mx-auto mt-2 max-w-3xl text-center text-xs text-ink-500">
+            Chat With Your Docs answers only from your uploaded documents and cites its sources — it will say so when it doesn't know.
+          </p>
         </div>
-        <p className="mx-auto mt-2 max-w-3xl text-center text-xs text-ink-500">
-          Chat With Your Docs answers only from your uploaded documents and cites its sources — it will say so when it doesn't know.
-        </p>
       </div>
 
       <SourcesDrawer chunk={activeChunk} onClose={() => setActiveChunk(null)} />
@@ -169,8 +214,13 @@ export function ChatPanel({ conversationId, onConversationId, hasDocuments }: Pr
 
 function EmptyState({ hasDocuments }: { hasDocuments: boolean }) {
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-2 py-24 text-center">
-      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-500/15 text-2xl">💬</div>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.2 }}
+      className="flex h-full flex-col items-center justify-center gap-2 py-24 text-center"
+    >
+      <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-brand-500/15 text-2xl">💬</div>
       <h2 className="text-lg font-medium text-ink-100">
         {hasDocuments ? "Ask anything about your documents" : "Start by uploading a document"}
       </h2>
@@ -179,6 +229,6 @@ function EmptyState({ hasDocuments }: { hasDocuments: boolean }) {
           ? "Chat With Your Docs retrieves the most relevant excerpts and answers with citations you can inspect."
           : "Use the sidebar to upload a PDF, text, or Markdown file — then come back here to ask questions about it."}
       </p>
-    </div>
+    </motion.div>
   );
 }

@@ -2,7 +2,7 @@
 
 A RAG assistant that answers questions about a collection of PDF/TXT/Markdown files, with inline citations, a confidence signal, and a built-in observability panel that shows exactly what was retrieved and why for every answer.
 
-FastAPI + hybrid (vector + BM25) retrieval + Claude, with a React/TypeScript chat UI.
+FastAPI + hybrid (vector + BM25) retrieval + Claude, with a React/TypeScript chat UI (Tailwind, Radix/shadcn-style primitives, Motion, react-pdf for source previews — responsive down to mobile, with a Sheet-based drawer nav below the `md` breakpoint).
 
 ![Chat](docs/screenshots/chat.png)
 
@@ -187,7 +187,7 @@ What that looked like in practice, and where I drew the line between "let it dra
 
 Acknowledged rather than hidden, per the assignment's own framing:
 
-- **No re-embedding on chunking-parameter changes.** Change `CHUNK_SIZE` in `.env` and existing documents stay indexed at the old size until re-uploaded. A migration/re-index endpoint is the fix.
+- **Reindexing exists but is manual, per-document.** `POST /api/documents/{id}/reindex` re-runs ingestion from the originally uploaded bytes (kept on disk in `backend/data/files/`) — useful after a `CHUNK_SIZE`/embedding config change, triggered from the UI's per-document refresh icon. There's no bulk "reindex everything" action yet.
 - **No OCR.** Scanned/image-only PDFs extract no text (`pypdf` is text-layer-only) and currently fail ingestion with a clear error rather than silently returning nothing — but they should ideally work. Tesseract or a cloud OCR step is the natural addition.
 - **No cross-page chunking**, discussed above under [Chunking](#chunking).
 - **No conversation summarization** — history beyond `max_history_turns` is dropped, not condensed. Fine for short Q&A sessions, a real gap for long ones.

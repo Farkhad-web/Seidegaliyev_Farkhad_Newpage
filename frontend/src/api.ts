@@ -29,6 +29,11 @@ export const api = {
     if (!r.ok) throw new Error("Failed to delete document");
   }),
 
+  reindexDocument: (id: string) =>
+    fetch(`${BASE}/documents/${id}/reindex`, { method: "POST" }).then((r) => asJson<DocumentItem>(r)),
+
+  documentFileUrl: (id: string) => `${BASE}/documents/${id}/file`,
+
   listConversations: () => fetch(`${BASE}/conversations`).then((r) => asJson<ConversationItem[]>(r)),
 
   getMessages: (conversationId: string) =>

@@ -24,6 +24,22 @@ export default {
       },
       fontFamily: {
         sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+        mono: ["JetBrains Mono", "ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
+      },
+      // Linear/Vercel read as "crisp", not "soft" — a smaller base radius than
+      // Tailwind's defaults, driven by one CSS var so every component (ours
+      // and the vendored shadcn primitives) shares the same scale.
+      borderRadius: {
+        sm: "calc(var(--radius) - 4px)",
+        md: "calc(var(--radius) - 2px)",
+        lg: "var(--radius)",
+        xl: "calc(var(--radius) + 4px)",
+      },
+      // No heavy drop shadows — elevation comes from a 1px border plus a
+      // faint shadow just enough to lift a panel off the page.
+      boxShadow: {
+        soft: "0 1px 2px rgba(0,0,0,0.4), 0 4px 16px -4px rgba(0,0,0,0.35)",
+        ring: "0 0 0 1px rgba(109,94,248,0.4)",
       },
       keyframes: {
         blink: { "0%, 100%": { opacity: 1 }, "50%": { opacity: 0 } },
@@ -31,9 +47,9 @@ export default {
       },
       animation: {
         blink: "blink 1s steps(1) infinite",
-        fadeIn: "fadeIn 0.2s ease-out",
+        fadeIn: "fadeIn 0.15s ease-out",
       },
     },
   },
-  plugins: [],
+  plugins: [require("tailwindcss-animate")],
 };

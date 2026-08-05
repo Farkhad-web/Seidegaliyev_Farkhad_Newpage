@@ -54,6 +54,7 @@ class Settings(BaseSettings):
     # --- Storage ---
     sqlite_path: str = str(DATA_DIR / "chat_with_your_docs.db")
     chroma_path: str = str(DATA_DIR / "chroma")
+    files_path: str = str(DATA_DIR / "files")
 
     # --- CORS ---
     # 5173 = Vite dev server (frontend run outside Docker); 8080 = the nginx

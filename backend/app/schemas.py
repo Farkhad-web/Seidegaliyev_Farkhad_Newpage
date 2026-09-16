@@ -14,7 +14,7 @@ class ORMBase(BaseModel):
 
 class DocumentOut(ORMBase):
     id: str
-    filename: str
+    filename: str  
     content_type: str
     size_bytes: int
     num_pages: int
@@ -58,8 +58,8 @@ class RetrievedChunkOut(BaseModel):
 
 class TraceOut(ORMBase):
     id: str
-    conversation_id: str
-    raw_query: str
+    conversation_id: str 
+    raw_query: str 
     condensed_query: str | None
     retrieved: list[dict]
     answer: str
